@@ -1,5 +1,4 @@
-# Utiliser une MagicGeek TV et Home Assistant pour afficher les prochains trains
-# au départ d'une gare sncf vers une autre (ici d'Enghien les Bains vers Paris Nord)
+# Utiliser une MagicGeek TV et Home Assistant pour afficher les prochains trains au départ d'une gare sncf vers une autre (ici d'Enghien les Bains vers Paris Nord)
 
 <img src="data/MagicTV.png" width="150" height="150"> <img src="data/trains.png" width="150" height="150">
 
