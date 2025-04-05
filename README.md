@@ -1,6 +1,6 @@
 # Afficher les prochains train au départ d'une gare sncf vers une autre
-  <![MiniTV](data/MagicTV.png) width="150" height="280"> ;  ![Trains](data/trains.png)
-
+  ![Trains](data/trains.png)
+<img src="data/MagicTV.png" width="150" height="280">
 
 Le projet:
 - Afficher le nombre de minutes restantes avant les 3 prochains trains au départ de la Gare d'Enghien les Bains, vers Paris Gare du Nord
