@@ -1,41 +1,47 @@
-# Utiliser une MagicGeek TV et Home Assistant pour afficher les prochains trains au départ d'une gare SNCF vers une autre
+# Utiliser une MagicGeek TV et Home Assistant pour afficher les prochains trains au départ d'une gare sncf vers une autre (ici d'Enghien les Bains vers Paris Nord)
 
-<img src="data/MagicTV.png" width="150" height="150"> <img src="data/trains.png" width="150" height="150">
+#      <img src="data/MagicTV.png" width="150" height="150">        >>>>>>>>        <img src="data/trains.png" width="150" height="150">
 
-## Le projet
+# Le projet:
+- Afficher le nombre de minutes restantes avant les 3 prochains trains au départ de la Gare d'Enghien les Bains, vers Paris Gare du Nord
+- utiliser un code couleur sur le premier train à venir:
+  Vert si on a le temps ( >5 mn)
+  Orange si il est temps de partir (<5 mn et >3minutes)
+  Rouge si il faut se dépecher (<3mn)
+- afficher que les prochains trains (l'API à tendence à conserver un temps négatif lorsque le train vien de partir...)
+  A l'aide d ESPHOME
 
-- Afficher le nombre de minutes restantes avant les 3 prochains trains au départ de la Gare d'Enghien les Bains, vers Paris Gare du Nord.
-- Utiliser un code couleur sur le premier train à venir :
-  - **Vert** si on a le temps (>5 min)
-  - **Orange** si il est temps de partir (<5 min et >3 min)
-  - **Rouge** si il faut se dépêcher (<3 min)
-- Afficher uniquement les prochains trains (l'API a tendance à conserver un temps négatif lorsque le train vient de partir).
-- Utilisation d'ESPHome pour le développement.
 
-## Matériel requis
+# Le materiel requis:
+- Un écran GeekMagic – Station de prévision météo WiFi 
+  https://fr.aliexpress.com/item/1005006159850972.html
+- Home Assistant, avec une Clé API SNCF
+  https://ressources.data.sncf.com/pages/accueil/
+- installer Train Traveler dans Home Assitant ou l API REST
+  (Les deux methodes sont décrites)
 
-- **Écran GeekMagic** – Station de prévision météo WiFi
-  [Lien Aliexpress](https://fr.aliexpress.com/item/1005006159850972.html)
-- **Home Assistant**, avec une Clé API SNCF
-  [Lien API SNCF](https://ressources.data.sncf.com/pages/accueil/)
-- Installer **Train Traveler** dans Home Assistant ou utiliser l'API REST (les deux méthodes sont décrites).
+Le Code sera composé de plusieurs parties: 
 
-## Le Code
+# Le paramétrage de Train Traveler 
+Apres avoir installer l'API dans Home Assistant , lorsque vous "ajoutez un appareil", vous devez rentrer votre Clé API
+précédament obtenue aupres du site de la SNCF
 
-Le code sera composé de plusieurs parties :
+Vous devez ensuite renseigner la gare de départ, dans cet exemple Enghien les Bains, ainsi que la gare d'arrivée, ici Paris Nord 
 
-### Paramétrage de Train Traveler
+Il vous demande ensuite le nombre de prochains trains à récupérer : 4 (minimum)
+le taux de rafraischissemnt est à selectionner entre 600 et 720 secondes
+(ne pas mettre plus bas, au risque de vous faire ban par l API SNCF)
 
-1. Après avoir installé l'API dans Home Assistant, lorsque vous "ajoutez un appareil", vous devez rentrer votre Clé API précédemment obtenue auprès du site de la SNCF.
-2. Renseignez la gare de départ (ex. Enghien les Bains) et la gare d'arrivée (ex. Paris Nord).
-3. Sélectionnez le nombre de prochains trains à récupérer : 4 (minimum).
-4. Choisissez le taux de rafraîchissement entre 600 et 720 secondes (ne pas mettre plus bas, au risque de vous faire bannir par l'API SNCF).
+Il y a une option qui aurait pu etre interressante, c'est la récupération du dernier train de la journée, histroire de savoir jusqu'a quelle heure vous pouvez trainer à Paris, 
+mais comme elle ne gere pas le premier train apres minuit... c est pas tres utile. Une prochaine évolution du code sera d afficher cette info (dernier train de la journée annoncé, ou premier train du lendemain avant 2h...)
 
-### Paramétrage de l'API REST
 
-```yaml
+vous pouvez aussi passer par l API REST de Home Assistant
+# Le paramétrage de l'API Rest 
+
+```
 rest:
-  - resource: https://VOTRE_CLE_API@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area\:SNCF:87271007/departures?data_freshness=realtime
+  - resource: https://VOTRE CLE API@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:87271007/departures?data_freshness=realtime
     scan_interval: 600
     sensor:
       - name: "Prochains départs de Gare Du Nord"
@@ -50,7 +56,23 @@ rest:
         json_attributes:
           - departures
 
-  - resource: https://VOTRE_CLE_API@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area\:SNCF:87276022/departures?data_freshness=realtime
+  - resource: https://VOTRE CLE API8@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:87276022/departures?data_freshness=realtime
+    scan_interval: 600
+    sensor:
+      - name: "Prochains départs de Gare d'Enghien2"
+        value_template: >
+          {% set departures = value_json['departures'] %}
+          {% if departures | length >= 1 %}
+            {% set dep1 = departures[0]['stop_date_time']['departure_date_time'] %}
+            {{ strptime(dep1, '%Y%m%dT%H%M%S').strftime('%Y-%m-%d %H:%M:%S') }}
+          {% else %}
+            Pas de départ imminent
+          {% endif %}
+        json_attributes:
+          - departures
+
+
+  - resource: https://VOTRE CLE API@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:87276022/departures?data_freshness=realtime
     scan_interval: 600
     sensor:
       - name: "Prochains départs de Gare d'Enghien"
@@ -64,6 +86,24 @@ rest:
           {% endif %}
         json_attributes:
           - departures
+
+
+  - resource: http://dataservice.accuweather.com/locations/v1/cities/neighbors/1107884/?apikey=T2pRStqGqoWOIznRGc8igoahABIy2dWR
+    scan_interval: 600
+    sensor:
+      - name: "Premiere API"
+        value_template: >
+          {% set AdministrativeArea = value_json['AdministrativeArea'] %}
+          {% if AdministrativeArea | length >= 1 %}
+            {% set dep1 = AdministrativeArea[0]['LocalizedName']['CountryID'] %}
+            {{ dep1 }}
+          {% else %}
+            Aucun départ imminent
+          {% endif %}
+        json_attributes:
+          - AdministrativeArea
+
+```
 
 
 # Le code ESPHOME à flasher sur la MiniTV
