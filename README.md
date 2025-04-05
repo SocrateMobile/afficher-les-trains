@@ -2,7 +2,7 @@
 
 <img src="data/MagicTV.png" width="150" height="150"> <img src="data/trains.png" width="150" height="150">
 
-Le projet:
+# Le projet:
 - Afficher le nombre de minutes restantes avant les 3 prochains trains au départ de la Gare d'Enghien les Bains, vers Paris Gare du Nord
 - utiliser un code couleur sur le premier train à venir:
   Vert si on a le temps ( >5 mn)
@@ -12,7 +12,7 @@ Le projet:
   A l'aide d ESPHOME
 
 
-Le materiel requis:
+# Le materiel requis:
 - Un écran GeekMagic – Station de prévision météo WiFi 
   https://fr.aliexpress.com/item/1005006159850972.html
 - Home Assistant, avec une Clé API SNCF
@@ -22,7 +22,77 @@ Le materiel requis:
 
 Le Code sera composé de plusieurs parties: 
 
-# 
+# Le paramétrage de Train Traveler 
+
+
+vous pouvez aussi passer par l API REST de Home Assistant
+# Le paramétrage de l'API Rest 
+
+```
+rest:
+  - resource: https://VOTRE CLE API@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:87271007/departures?data_freshness=realtime
+    scan_interval: 600
+    sensor:
+      - name: "Prochains départs de Gare Du Nord"
+        value_template: >
+          {% set departures = value_json['departures'] %}
+          {% if departures | length >= 1 %}
+            {% set dep1 = departures[0]['stop_date_time']['departure_date_time'] %}
+            {{ strptime(dep1, '%Y%m%dT%H%M%S').strftime('%Y-%m-%d %H:%M:%S') }}
+          {% else %}
+            Pas de départ imminent
+          {% endif %}
+        json_attributes:
+          - departures
+
+  - resource: https://VOTRE CLE API8@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:87276022/departures?data_freshness=realtime
+    scan_interval: 600
+    sensor:
+      - name: "Prochains départs de Gare d'Enghien2"
+        value_template: >
+          {% set departures = value_json['departures'] %}
+          {% if departures | length >= 1 %}
+            {% set dep1 = departures[0]['stop_date_time']['departure_date_time'] %}
+            {{ strptime(dep1, '%Y%m%dT%H%M%S').strftime('%Y-%m-%d %H:%M:%S') }}
+          {% else %}
+            Pas de départ imminent
+          {% endif %}
+        json_attributes:
+          - departures
+
+
+  - resource: https://VOTRE CLE API@api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:87276022/departures?data_freshness=realtime
+    scan_interval: 600
+    sensor:
+      - name: "Prochains départs de Gare d'Enghien"
+        value_template: >
+          {% set departures = value_json['departures'] %}
+          {% if departures | length >= 1 %}
+            {% set dep1 = departures[0]['stop_date_time']['departure_date_time'] %}
+            {{ strptime(dep1, '%Y%m%dT%H%M%S').strftime('%Y-%m-%d %H:%M:%S') }}
+          {% else %}
+            Pas de départ imminent
+          {% endif %}
+        json_attributes:
+          - departures
+
+
+  - resource: http://dataservice.accuweather.com/locations/v1/cities/neighbors/1107884/?apikey=T2pRStqGqoWOIznRGc8igoahABIy2dWR
+    scan_interval: 600
+    sensor:
+      - name: "Premiere API"
+        value_template: >
+          {% set AdministrativeArea = value_json['AdministrativeArea'] %}
+          {% if AdministrativeArea | length >= 1 %}
+            {% set dep1 = AdministrativeArea[0]['LocalizedName']['CountryID'] %}
+            {{ dep1 }}
+          {% else %}
+            Aucun départ imminent
+          {% endif %}
+        json_attributes:
+          - AdministrativeArea
+
+```
 
 
 # Le code ESPHOME à flasher sur la MiniTV
