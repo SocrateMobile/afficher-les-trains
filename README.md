@@ -22,7 +22,10 @@ Le materiel requis:
 
 Le Code sera composé de plusieurs parties: 
 
+# 
 
+
+# Le code ESPHOME à flasher sur la MiniTV
 ```
 substitutions:
   devicename: smalltv
