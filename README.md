@@ -1,6 +1,6 @@
 # Utiliser une MagicGeek TV et Home Assistant pour afficher les prochains trains au départ d'une gare sncf vers une autre (ici d'Enghien les Bains vers Paris Nord)
 
-## <img src="data/MagicTV.png" width="150" height="150">     =>   <img src="data/trains.png" width="150" height="150">
+#####      <img src="data/MagicTV.png" width="150" height="150">        =>        <img src="data/trains.png" width="150" height="150">
 
 # Le projet:
 - Afficher le nombre de minutes restantes avant les 3 prochains trains au départ de la Gare d'Enghien les Bains, vers Paris Gare du Nord
