@@ -30,6 +30,7 @@ Vous devez ensuite renseigner la gare de départ, dans cet exemple Enghien les B
 
 Il vous demande ensuite le nombre de prochains trains à récupérer : 4 (minimum)
 le taux de rafraischissemnt est à selectionner entre 600 et 720 secondes
+(ne pas mettre plus bas, au risque de vous faire ban par l API SNCF)
 
 Il y a une option qui aurait pu etre interressante, c'est la récupération du dernier train de la journée, histroire de savoir jusqu'a quelle heure vous pouvez trainer à Paris, 
 mais comme elle ne gere pas le premier train apres minuit... c est pas tres utile. Une prochaine évolution du code sera d afficher cette info (dernier train de la journée annoncé, ou premier train du lendemain avant 2h...)
@@ -244,6 +245,8 @@ color:
 #
 # le on_value, sert à forcer la mise à jour de l'écran et la remonté des données à 
 # chaque changement de valeur
+
+# le nom des sensors est à ajuster en fonction de ceux remontés dans votre intégration Train Traveler
 
 sensor:
   - platform: homeassistant
