@@ -1,5 +1,5 @@
 # Afficher les prochains train au départ d'une gare sncf vers une autre
-  ![MiniTV](data/MagicTV.png) ;  ![Trains](data/trains.png)
+  <![MiniTV](data/MagicTV.png) width="150" height="280"> ;  ![Trains](data/trains.png)
 
 
 Le projet:
