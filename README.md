@@ -23,6 +23,16 @@
 Le Code sera composé de plusieurs parties: 
 
 # Le paramétrage de Train Traveler 
+Apres avoir installer l'API dans Home Assistant , lorsque vous "ajoutez un appareil", vous devez rentrer votre Clé API
+précédament obtenue aupres du site de la SNCF
+
+Vous devez ensuite renseigner la gare de départ, dans cet exemple Enghien les Bains, ainsi que la gare d'arrivée, ici Paris Nord 
+
+Il vous demande ensuite le nombre de prochains trains à récupérer : 4 (minimum)
+le taux de rafraischissemnt est à selectionner entre 600 et 720 secondes
+
+Il y a une option qui aurait pu etre interressante, c'est la récupération du dernier train de la journée, histroire de savoir jusqu'a quelle heure vous pouvez trainer à Paris, 
+mais comme elle ne gere pas le premier train apres minuit... c est pas tres utile. Une prochaine évolution du code sera d afficher cette info (dernier train de la journée annoncé, ou premier train du lendemain avant 2h...)
 
 
 vous pouvez aussi passer par l API REST de Home Assistant
